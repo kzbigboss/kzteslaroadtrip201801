@@ -3709,87 +3709,7 @@
     </mapsource>
   </mapsources>
   <worksheets>
-    <worksheet name='Sheet 4'>
-      <table>
-        <view>
-          <datasources>
-            <datasource caption='kztesla' name='federated.0pelxf9102xnn116j9vjo1ibk0c4' />
-          </datasources>
-          <datasource-dependencies datasource='federated.0pelxf9102xnn116j9vjo1ibk0c4'>
-            <column caption='Miles Traveled ' datatype='real' name='[Calculation_1602296328486719491]' role='measure' type='quantitative'>
-              <calculation class='tableau' formula='max([odometer]) - min([odometer])' />
-            </column>
-            <column-instance column='[Calculation_1602296328486719491]' derivation='User' name='[cum:usr:Calculation_1602296328486719491:qk]' pivot='key' type='quantitative'>
-              <table-calc aggregation='Sum' ordering-type='Columns' type='CumTotal' />
-            </column-instance>
-            <column datatype='integer' name='[drive_state_power]' role='measure' type='quantitative' />
-            <column-instance column='[outside_temp_f]' derivation='Max' name='[max:outside_temp_f:qk]' pivot='key' type='quantitative' />
-            <column-instance column='[outside_temp_f]' derivation='Min' name='[min:outside_temp_f:qk]' pivot='key' type='quantitative' />
-            <column-instance column='[trip_day]' derivation='None' name='[none:trip_day:ok]' pivot='key' type='ordinal' />
-            <column caption='Odometer' datatype='real' name='[odometer]' role='measure' type='quantitative' />
-            <column caption='Outside Temp F' datatype='real' name='[outside_temp_f]' role='measure' type='quantitative' />
-            <column-instance column='[drive_state_power]' derivation='Sum' name='[sum:drive_state_power:qk]' pivot='key' type='quantitative' />
-            <column aggregation='Sum' datatype='integer' name='[trip_day]' role='dimension' type='ordinal' />
-            <column-instance column='[Calculation_1602296328486719491]' derivation='User' name='[usr:Calculation_1602296328486719491:qk]' pivot='key' type='quantitative' />
-          </datasource-dependencies>
-          <filter class='categorical' column='[federated.0pelxf9102xnn116j9vjo1ibk0c4].[:Measure Names]'>
-            <groupfilter function='union' user:op='manual'>
-              <groupfilter function='member' level='[:Measure Names]' member='&quot;[federated.0pelxf9102xnn116j9vjo1ibk0c4].[min:outside_temp_f:qk]&quot;' />
-              <groupfilter function='member' level='[:Measure Names]' member='&quot;[federated.0pelxf9102xnn116j9vjo1ibk0c4].[max:outside_temp_f:qk]&quot;' />
-              <groupfilter function='member' level='[:Measure Names]' member='&quot;[federated.0pelxf9102xnn116j9vjo1ibk0c4].[usr:Calculation_1602296328486719491:qk]&quot;' />
-              <groupfilter function='member' level='[:Measure Names]' member='&quot;[federated.0pelxf9102xnn116j9vjo1ibk0c4].[cum:usr:Calculation_1602296328486719491:qk]&quot;' />
-              <groupfilter function='member' level='[:Measure Names]' member='&quot;[federated.0pelxf9102xnn116j9vjo1ibk0c4].[sum:drive_state_power:qk]&quot;' />
-            </groupfilter>
-          </filter>
-          <sort class='manual' column='[federated.0pelxf9102xnn116j9vjo1ibk0c4].[:Measure Names]' direction='ASC'>
-            <dictionary>
-              <bucket>&quot;[federated.0pelxf9102xnn116j9vjo1ibk0c4].[min:outside_temp_f:qk]&quot;</bucket>
-              <bucket>&quot;[federated.0pelxf9102xnn116j9vjo1ibk0c4].[max:outside_temp_f:qk]&quot;</bucket>
-              <bucket>&quot;[federated.0pelxf9102xnn116j9vjo1ibk0c4].[usr:Calculation_1602296328486719491:qk]&quot;</bucket>
-              <bucket>&quot;[federated.0pelxf9102xnn116j9vjo1ibk0c4].[cum:usr:Calculation_1602296328486719491:qk]&quot;</bucket>
-            </dictionary>
-          </sort>
-          <filter class='categorical' column='[federated.0pelxf9102xnn116j9vjo1ibk0c4].[none:trip_day:ok]'>
-            <groupfilter function='except' user:ui-domain='relevant' user:ui-enumeration='exclusive' user:ui-marker='enumerate'>
-              <groupfilter function='level-members' level='[none:trip_day:ok]' />
-              <groupfilter function='member' level='[none:trip_day:ok]' member='0' />
-            </groupfilter>
-          </filter>
-          <slices>
-            <column>[federated.0pelxf9102xnn116j9vjo1ibk0c4].[none:trip_day:ok]</column>
-            <column>[federated.0pelxf9102xnn116j9vjo1ibk0c4].[:Measure Names]</column>
-          </slices>
-          <aggregation value='true' />
-        </view>
-        <style>
-          <style-rule element='cell'>
-            <format attr='text-format' field='[federated.0pelxf9102xnn116j9vjo1ibk0c4].[max:outside_temp_f:qk]' value='n#,##0.0;-#,##0.0' />
-            <format attr='text-format' field='[federated.0pelxf9102xnn116j9vjo1ibk0c4].[min:outside_temp_f:qk]' value='n#,##0.0;-#,##0.0' />
-            <format attr='text-format' field='[federated.0pelxf9102xnn116j9vjo1ibk0c4].[usr:Calculation_1602296328486719491:qk]' value='n#,##0.0;-#,##0.0' />
-            <format attr='text-format' field='[federated.0pelxf9102xnn116j9vjo1ibk0c4].[cum:usr:Calculation_1602296328486719491:qk]' value='n#,##0.0;-#,##0.0' />
-          </style-rule>
-        </style>
-        <panes>
-          <pane selection-relaxation-option='selection-relaxation-allow'>
-            <view>
-              <breakdown value='auto' />
-            </view>
-            <mark class='Automatic' />
-            <encodings>
-              <text column='[federated.0pelxf9102xnn116j9vjo1ibk0c4].[Multiple Values]' />
-            </encodings>
-            <style>
-              <style-rule element='mark'>
-                <format attr='mark-labels-show' value='true' />
-              </style-rule>
-            </style>
-          </pane>
-        </panes>
-        <rows>[federated.0pelxf9102xnn116j9vjo1ibk0c4].[none:trip_day:ok]</rows>
-        <cols>[federated.0pelxf9102xnn116j9vjo1ibk0c4].[:Measure Names]</cols>
-      </table>
-    </worksheet>
-    <worksheet name='Sheet 5'>
+    <worksheet name='range: ideal v estimate'>
       <table>
         <view>
           <datasources>
@@ -3812,34 +3732,56 @@
             <column caption='tz_timestamp' datatype='datetime' name='[Calculation_1157988073927524365]' role='dimension' type='quantitative'>
               <calculation class='tableau' formula='DATEADD(&apos;hour&apos;,[Parameters].[Parameter 2],[timestamp])' />
             </column>
-            <column caption='label' datatype='string' name='[Calculation_1602296328498536456]' role='dimension' type='nominal'>
-              <calculation class='tableau' formula='if INT([unixtime]) &gt; 1514830569 then &apos;Y&apos; else &apos;N&apos; END' />
-            </column>
-            <column datatype='string' name='[charge_state_charging_state]' role='dimension' semantic-role='[State].[Name]' type='nominal' />
+            <column datatype='real' name='[charge_state_est_battery_range]' role='measure' type='quantitative' />
+            <column datatype='real' name='[charge_state_ideal_battery_range]' role='measure' type='quantitative' />
+            <column caption='Charging State' datatype='string' name='[charging_state]' role='dimension' semantic-role='' type='nominal' />
             <column-instance column='[Calculation_1157988073927524365]' derivation='None' name='[none:Calculation_1157988073927524365:ok]' pivot='key' type='ordinal' />
-            <column-instance column='[Calculation_1602296328498536456]' derivation='None' name='[none:Calculation_1602296328498536456:nk]' pivot='key' type='nominal' />
-            <column-instance column='[charge_state_charging_state]' derivation='None' name='[none:charge_state_charging_state:nk]' pivot='key' type='nominal' />
+            <column-instance column='[charge_state_est_battery_range]' derivation='None' name='[none:charge_state_est_battery_range:qk]' pivot='key' type='quantitative' />
+            <column-instance column='[charge_state_ideal_battery_range]' derivation='None' name='[none:charge_state_ideal_battery_range:qk]' pivot='key' type='quantitative' />
+            <column-instance column='[charging_state]' derivation='None' name='[none:charging_state:nk]' pivot='key' type='nominal' />
+            <column-instance column='[outside_temp_f]' derivation='None' name='[none:outside_temp_f:qk]' pivot='key' type='quantitative' />
             <column-instance column='[trip_day]' derivation='None' name='[none:trip_day:ok]' pivot='key' type='ordinal' />
-            <column-instance column='[trip_event]' derivation='None' name='[none:trip_event:nk]' pivot='key' type='nominal' />
-            <column-instance column='[unixtime]' derivation='None' name='[none:unixtime:nk]' pivot='key' type='nominal' />
+            <column caption='Outside Temp F' datatype='real' name='[outside_temp_f]' role='measure' type='quantitative' />
             <column caption='Timestamp' datatype='datetime' name='[timestamp]' role='dimension' type='ordinal' />
             <column aggregation='Sum' datatype='integer' name='[trip_day]' role='dimension' type='ordinal' />
-            <column datatype='string' name='[trip_event]' role='dimension' type='nominal' />
-            <column datatype='string' datatype-customized='true' name='[unixtime]' role='dimension' type='nominal' />
           </datasource-dependencies>
+          <filter class='categorical' column='[federated.0pelxf9102xnn116j9vjo1ibk0c4].[none:charging_state:nk]'>
+            <groupfilter function='member' level='[none:charging_state:nk]' member='&quot;Charging&quot;' user:ui-domain='relevant' user:ui-enumeration='inclusive' user:ui-marker='enumerate' />
+          </filter>
+          <filter class='categorical' column='[federated.0pelxf9102xnn116j9vjo1ibk0c4].[none:trip_day:ok]'>
+            <groupfilter function='except' user:ui-domain='relevant' user:ui-enumeration='exclusive' user:ui-marker='enumerate'>
+              <groupfilter function='level-members' level='[none:trip_day:ok]' />
+              <groupfilter function='member' level='[none:trip_day:ok]' member='0' />
+            </groupfilter>
+          </filter>
+          <slices>
+            <column>[federated.0pelxf9102xnn116j9vjo1ibk0c4].[none:charging_state:nk]</column>
+            <column>[federated.0pelxf9102xnn116j9vjo1ibk0c4].[none:trip_day:ok]</column>
+          </slices>
           <aggregation value='true' />
         </view>
         <style />
         <panes>
-          <pane selection-relaxation-option='selection-relaxation-allow'>
+          <pane id='2' selection-relaxation-option='selection-relaxation-allow'>
             <view>
               <breakdown value='auto' />
             </view>
             <mark class='Automatic' />
+            <mark-sizing mark-sizing-setting='marks-scaling-off' />
+            <encodings>
+              <color column='[federated.0pelxf9102xnn116j9vjo1ibk0c4].[none:outside_temp_f:qk]' />
+              <lod column='[federated.0pelxf9102xnn116j9vjo1ibk0c4].[none:Calculation_1157988073927524365:ok]' />
+            </encodings>
+            <style>
+              <style-rule element='mark'>
+                <format attr='shape' value=':filled/circle' />
+                <format attr='size' value='0.62569057941436768' />
+              </style-rule>
+            </style>
           </pane>
         </panes>
-        <rows>([federated.0pelxf9102xnn116j9vjo1ibk0c4].[none:Calculation_1157988073927524365:ok] / ([federated.0pelxf9102xnn116j9vjo1ibk0c4].[none:unixtime:nk] / ([federated.0pelxf9102xnn116j9vjo1ibk0c4].[none:Calculation_1602296328498536456:nk] / ([federated.0pelxf9102xnn116j9vjo1ibk0c4].[none:trip_day:ok] / ([federated.0pelxf9102xnn116j9vjo1ibk0c4].[none:trip_event:nk] / [federated.0pelxf9102xnn116j9vjo1ibk0c4].[none:charge_state_charging_state:nk])))))</rows>
-        <cols />
+        <rows>[federated.0pelxf9102xnn116j9vjo1ibk0c4].[none:charge_state_ideal_battery_range:qk]</rows>
+        <cols>[federated.0pelxf9102xnn116j9vjo1ibk0c4].[none:charge_state_est_battery_range:qk]</cols>
       </table>
     </worksheet>
     <worksheet name='route days'>
@@ -4059,9 +4001,11 @@
               <calculation class='tableau' formula='DATEADD(&apos;hour&apos;,[Parameters].[Parameter 2],[timestamp])' />
             </column>
             <column caption='Charge Rate' datatype='real' name='[charge_rate]' role='measure' type='quantitative' />
+            <column datatype='real' name='[charge_state_charge_rate]' role='measure' type='quantitative' />
             <column caption='Charging State' datatype='string' name='[charging_state]' role='dimension' semantic-role='' type='nominal' />
             <column-instance column='[Calculation_1157988073927524365]' derivation='None' name='[none:Calculation_1157988073927524365:ok]' pivot='key' type='ordinal' />
             <column-instance column='[charge_rate]' derivation='None' name='[none:charge_rate:qk]' pivot='key' type='quantitative' />
+            <column-instance column='[charge_state_charge_rate]' derivation='None' name='[none:charge_state_charge_rate:qk]' pivot='key' type='quantitative' />
             <column-instance column='[charging_state]' derivation='None' name='[none:charging_state:nk]' pivot='key' type='nominal' />
             <column-instance column='[outside_temp_f]' derivation='None' name='[none:outside_temp_f:qk]' pivot='key' type='quantitative' />
             <column-instance column='[trip_day]' derivation='None' name='[none:trip_day:ok]' pivot='key' type='ordinal' />
@@ -4071,6 +4015,10 @@
             <column aggregation='Sum' datatype='integer' name='[trip_day]' role='dimension' type='ordinal' />
             <column datatype='string' name='[trip_event]' role='dimension' type='nominal' />
           </datasource-dependencies>
+          <filter class='quantitative' column='[federated.0pelxf9102xnn116j9vjo1ibk0c4].[none:charge_rate:qk]' included-values='in-range'>
+            <min>100.0</min>
+            <max>371.2000122</max>
+          </filter>
           <filter class='categorical' column='[federated.0pelxf9102xnn116j9vjo1ibk0c4].[none:charging_state:nk]'>
             <groupfilter function='member' level='[none:charging_state:nk]' member='&quot;Charging&quot;' user:ui-domain='relevant' user:ui-enumeration='inclusive' user:ui-marker='enumerate' />
           </filter>
@@ -4087,10 +4035,19 @@
             <column>[federated.0pelxf9102xnn116j9vjo1ibk0c4].[none:charging_state:nk]</column>
             <column>[federated.0pelxf9102xnn116j9vjo1ibk0c4].[none:trip_day:ok]</column>
             <column>[federated.0pelxf9102xnn116j9vjo1ibk0c4].[none:trip_event:nk]</column>
+            <column>[federated.0pelxf9102xnn116j9vjo1ibk0c4].[none:charge_rate:qk]</column>
           </slices>
           <aggregation value='true' />
         </view>
-        <style />
+        <style>
+          <style-rule element='legend'>
+            <format attr='font-size' value='5' />
+          </style-rule>
+          <style-rule element='legend-title'>
+            <format attr='font-weight' value='normal' />
+            <format attr='font-size' value='7' />
+          </style-rule>
+        </style>
         <panes>
           <pane id='2' selection-relaxation-option='selection-relaxation-allow'>
             <view>
@@ -4105,88 +4062,51 @@
             <style>
               <style-rule element='mark'>
                 <format attr='shape' value=':filled/circle' />
-                <format attr='size' value='1' />
+                <format attr='size' value='0.69165748357772827' />
               </style-rule>
             </style>
           </pane>
         </panes>
-        <rows>[federated.0pelxf9102xnn116j9vjo1ibk0c4].[none:charge_rate:qk]</rows>
+        <rows>[federated.0pelxf9102xnn116j9vjo1ibk0c4].[none:charge_state_charge_rate:qk]</rows>
         <cols>[federated.0pelxf9102xnn116j9vjo1ibk0c4].[none:outside_temp_f:qk]</cols>
-      </table>
-    </worksheet>
-    <worksheet name='temp v charge rate (2)'>
-      <table>
-        <view>
-          <datasources>
-            <datasource caption='kztesla' name='federated.0pelxf9102xnn116j9vjo1ibk0c4' />
-            <datasource name='Parameters' />
-          </datasources>
-          <datasource-dependencies datasource='Parameters'>
-            <column alias='US Mountain' caption='Select Timezone' datatype='integer' name='[Parameter 2]' param-domain-type='list' role='measure' type='quantitative' value='-7'>
-              <calculation class='tableau' formula='-7' />
-              <aliases>
-                <alias key='-8' value='US Pacific' />
-                <alias key='-7' value='US Mountain' />
-                <alias key='-6' value='US Central' />
-                <alias key='-5' value='US Eastern' />
-                <alias key='0' value='UTC' />
-              </aliases>
-            </column>
-          </datasource-dependencies>
-          <datasource-dependencies datasource='federated.0pelxf9102xnn116j9vjo1ibk0c4'>
-            <column caption='tz_timestamp' datatype='datetime' name='[Calculation_1157988073927524365]' role='dimension' type='quantitative'>
-              <calculation class='tableau' formula='DATEADD(&apos;hour&apos;,[Parameters].[Parameter 2],[timestamp])' />
-            </column>
-            <column caption='Charging State' datatype='string' name='[charging_state]' role='dimension' semantic-role='' type='nominal' />
-            <column-instance column='[Calculation_1157988073927524365]' derivation='None' name='[none:Calculation_1157988073927524365:ok]' pivot='key' type='ordinal' />
-            <column-instance column='[charging_state]' derivation='None' name='[none:charging_state:nk]' pivot='key' type='nominal' />
-            <column-instance column='[outside_temp_f]' derivation='None' name='[none:outside_temp_f:qk]' pivot='key' type='quantitative' />
-            <column-instance column='[trip_day]' derivation='None' name='[none:trip_day:ok]' pivot='key' type='ordinal' />
-            <column caption='Outside Temp F' datatype='real' name='[outside_temp_f]' role='measure' type='quantitative' />
-            <column caption='Timestamp' datatype='datetime' name='[timestamp]' role='dimension' type='ordinal' />
-            <column aggregation='Sum' datatype='integer' name='[trip_day]' role='dimension' type='ordinal' />
-          </datasource-dependencies>
-          <filter class='categorical' column='[federated.0pelxf9102xnn116j9vjo1ibk0c4].[none:charging_state:nk]'>
-            <groupfilter function='member' level='[none:charging_state:nk]' member='&quot;Charging&quot;' user:ui-domain='relevant' user:ui-enumeration='inclusive' user:ui-marker='enumerate' />
-          </filter>
-          <filter class='categorical' column='[federated.0pelxf9102xnn116j9vjo1ibk0c4].[none:trip_day:ok]'>
-            <groupfilter function='except' user:ui-domain='relevant' user:ui-enumeration='exclusive' user:ui-marker='enumerate'>
-              <groupfilter function='level-members' level='[none:trip_day:ok]' />
-              <groupfilter function='member' level='[none:trip_day:ok]' member='0' />
-            </groupfilter>
-          </filter>
-          <slices>
-            <column>[federated.0pelxf9102xnn116j9vjo1ibk0c4].[none:charging_state:nk]</column>
-            <column>[federated.0pelxf9102xnn116j9vjo1ibk0c4].[none:trip_day:ok]</column>
-          </slices>
-          <aggregation value='true' />
-        </view>
-        <style />
-        <panes>
-          <pane id='2' selection-relaxation-option='selection-relaxation-allow'>
-            <view>
-              <breakdown value='auto' />
-            </view>
-            <mark class='Automatic' />
-            <mark-sizing mark-sizing-setting='marks-scaling-off' />
-            <encodings>
-              <color column='[federated.0pelxf9102xnn116j9vjo1ibk0c4].[none:outside_temp_f:qk]' />
-              <lod column='[federated.0pelxf9102xnn116j9vjo1ibk0c4].[none:Calculation_1157988073927524365:ok]' />
-            </encodings>
-            <style>
-              <style-rule element='mark'>
-                <format attr='shape' value=':filled/circle' />
-                <format attr='size' value='1' />
-              </style-rule>
-            </style>
-          </pane>
-        </panes>
-        <rows />
-        <cols />
       </table>
     </worksheet>
   </worksheets>
   <dashboards>
+    <dashboard name='range dash'>
+      <style />
+      <size maxheight='380' maxwidth='600' minheight='380' minwidth='600' preset-index='16' sizing-mode='fixed' />
+      <zones use-insets='false'>
+        <zone h='100000' id='2' type='layout-basic' w='100000' x='0' y='0'>
+          <zone h='95790' id='5' param='horz' type='layout-flow' w='97334' x='1333' y='2105'>
+            <zone h='95790' id='3' type='layout-basic' w='97334' x='1333' y='2105'>
+              <zone h='95790' id='1' name='range: ideal v estimate' w='97334' x='1333' y='2105'>
+                <zone-style>
+                  <format attr='border-color' value='#000000' />
+                  <format attr='border-style' value='none' />
+                  <format attr='border-width' value='0' />
+                  <format attr='margin' value='4' />
+                </zone-style>
+              </zone>
+            </zone>
+          </zone>
+          <zone-style>
+            <format attr='border-color' value='#000000' />
+            <format attr='border-style' value='none' />
+            <format attr='border-width' value='0' />
+            <format attr='margin' value='8' />
+          </zone-style>
+        </zone>
+        <zone h='20000' id='6' name='range: ideal v estimate' pane-specification-id='2' param='[federated.0pelxf9102xnn116j9vjo1ibk0c4].[none:outside_temp_f:qk]' type='color' w='23333' x='74333' y='64737'>
+          <zone-style>
+            <format attr='border-color' value='#000000' />
+            <format attr='border-style' value='none' />
+            <format attr='border-width' value='0' />
+            <format attr='margin' value='4' />
+          </zone-style>
+        </zone>
+      </zones>
+    </dashboard>
     <dashboard name='route days dash'>
       <style />
       <size maxheight='380' maxwidth='600' minheight='380' minwidth='600' preset-index='16' sizing-mode='fixed' />
@@ -4219,6 +4139,48 @@
             <format attr='border-style' value='none' />
             <format attr='border-width' value='0' />
             <format attr='margin' value='4' />
+          </zone-style>
+        </zone>
+      </zones>
+    </dashboard>
+    <dashboard name='temp charge rate dash'>
+      <style />
+      <size maxheight='380' maxwidth='600' minheight='380' minwidth='600' preset-index='16' sizing-mode='fixed' />
+      <zones use-insets='false'>
+        <zone h='100000' id='2' type='layout-basic' w='100000' x='0' y='0'>
+          <zone h='95790' id='5' param='horz' type='layout-flow' w='97334' x='1333' y='2105'>
+            <zone h='95790' id='3' type='layout-basic' w='97334' x='1333' y='2105'>
+              <zone h='95790' id='1' name='temp v charge rate' w='88667' x='1333' y='2105'>
+                <zone-style>
+                  <format attr='border-color' value='#000000' />
+                  <format attr='border-style' value='none' />
+                  <format attr='border-width' value='0' />
+                  <format attr='margin' value='4' />
+                </zone-style>
+              </zone>
+              <zone h='64737' id='6' name='temp v charge rate' pane-specification-id='2' param='[federated.0pelxf9102xnn116j9vjo1ibk0c4].[none:trip_day:ok]' type='color' w='8667' x='90000' y='33158'>
+                <zone-style>
+                  <format attr='border-color' value='#000000' />
+                  <format attr='border-style' value='none' />
+                  <format attr='border-width' value='0' />
+                  <format attr='margin' value='4' />
+                </zone-style>
+              </zone>
+              <zone h='31053' id='7' type='empty' w='8667' x='90000' y='2105'>
+                <zone-style>
+                  <format attr='border-color' value='#000000' />
+                  <format attr='border-style' value='none' />
+                  <format attr='border-width' value='0' />
+                  <format attr='margin' value='4' />
+                </zone-style>
+              </zone>
+            </zone>
+          </zone>
+          <zone-style>
+            <format attr='border-color' value='#000000' />
+            <format attr='border-style' value='none' />
+            <format attr='border-width' value='0' />
+            <format attr='margin' value='8' />
           </zone-style>
         </zone>
       </zones>
@@ -4339,7 +4301,7 @@
       </viewpoints>
       <active id='-1' />
     </window>
-    <window class='worksheet' maximized='true' name='temp v charge rate'>
+    <window class='worksheet' name='temp v charge rate'>
       <cards>
         <edge name='left'>
           <strip size='160'>
@@ -4366,7 +4328,15 @@
         </edge>
       </cards>
     </window>
-    <window class='worksheet' name='temp v charge rate (2)'>
+    <window class='dashboard' name='temp charge rate dash'>
+      <viewpoints>
+        <viewpoint name='temp v charge rate'>
+          <zoom type='entire-view' />
+        </viewpoint>
+      </viewpoints>
+      <active id='-1' />
+    </window>
+    <window class='worksheet' name='range: ideal v estimate'>
       <cards>
         <edge name='left'>
           <strip size='160'>
@@ -4382,13 +4352,11 @@
           <strip size='2147483647'>
             <card type='rows' />
           </strip>
+          <strip size='2147483647'>
+            <card pane-specification-id='2' param='[federated.0pelxf9102xnn116j9vjo1ibk0c4].[none:outside_temp_f:qk]' type='color' />
+          </strip>
           <strip size='31'>
             <card type='title' />
-          </strip>
-        </edge>
-        <edge name='right'>
-          <strip size='160'>
-            <card pane-specification-id='2' param='[federated.0pelxf9102xnn116j9vjo1ibk0c4].[none:outside_temp_f:qk]' type='color' />
           </strip>
         </edge>
       </cards>
@@ -4396,58 +4364,13 @@
         <zoom type='entire-view' />
       </viewpoint>
     </window>
-    <window class='worksheet' name='Sheet 4'>
-      <cards>
-        <edge name='left'>
-          <strip size='160'>
-            <card type='pages' />
-            <card type='filters' />
-            <card type='marks' />
-            <card type='measures' />
-          </strip>
-        </edge>
-        <edge name='top'>
-          <strip size='2147483647'>
-            <card type='columns' />
-          </strip>
-          <strip size='2147483647'>
-            <card type='rows' />
-          </strip>
-          <strip size='31'>
-            <card type='title' />
-          </strip>
-        </edge>
-      </cards>
-      <viewpoint>
-        <zoom type='fit-width' />
-      </viewpoint>
-    </window>
-    <window class='worksheet' name='Sheet 5'>
-      <cards>
-        <edge name='left'>
-          <strip size='160'>
-            <card type='pages' />
-            <card type='filters' />
-            <card type='marks' />
-          </strip>
-        </edge>
-        <edge name='top'>
-          <strip size='2147483647'>
-            <card type='columns' />
-          </strip>
-          <strip size='2147483647'>
-            <card type='rows' />
-          </strip>
-          <strip size='31'>
-            <card type='title' />
-          </strip>
-        </edge>
-        <edge name='right'>
-          <strip size='160'>
-            <card mode='compact' param='[Parameters].[Parameter 2]' type='parameter' />
-          </strip>
-        </edge>
-      </cards>
+    <window class='dashboard' maximized='true' name='range dash'>
+      <viewpoints>
+        <viewpoint name='range: ideal v estimate'>
+          <zoom type='entire-view' />
+        </viewpoint>
+      </viewpoints>
+      <active id='-1' />
     </window>
   </windows>
 </workbook>

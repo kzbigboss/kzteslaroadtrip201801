@@ -1,43 +1,36 @@
-# A 2,386.7 mile Tesla Road Trip, measured with data
-<!-- TOC depthFrom:1 depthTo:6 withLinks:1 updateOnSave:1 orderedList:0 -->
+A 2,386.7 mile Tesla Road Trip, measured with data
+<!-- TOC depthFrom:1 depthTo:6 withLinks:1 updateOnSave:0 orderedList:0 -->
 
-- [A 2,386.7 mile Tesla Road Trip, measured with data](#a-23867-mile-tesla-road-trip-measured-with-data)
 - [Summary](#summary)
 	- [The car](#the-car)
 	- [The tech (AWS EC2 + RDS)](#the-tech-aws-ec2-rds)
 	- [The code (R + Tableau)](#the-code-r-tableau)
 - [Driving](#driving)
 	- [Snow + Cold Weather](#snow-cold-weather)
-	- [Cold weather’s impact on range and charging](#cold-weathers-impact-on-range-and-charging)
+	- [Cold weather’s impact on range and charging, discussed](#cold-weathers-impact-on-range-and-charging-discussed)
 	- [Navigation System Struggles](#navigation-system-struggles)
 	- [AutoPilot Hiccups](#autopilot-hiccups)
 - [Data](#data)
 	- [Manual Data](#manual-data)
-	- [add an event label based off unix timestamp](#add-an-event-label-based-off-unix-timestamp)
-	- [add an event day based off unit timestamp](#add-an-event-day-based-off-unit-timestamp)
-- [Overall Trip Metrics](#overall-trip-metrics)
+	- [Overall Trip Metrics](#overall-trip-metrics)
 	- [Charge Data](#charge-data)
-- [create subset for charging questions](#create-subset-for-charging-questions)
-		- [create subset focused on start/end times](#create-subset-focused-on-startend-times)
-- [summarize charge data](#summarize-charge-data)
+	- [Cold weather's impact on range and charging, visualized](#cold-weathers-impact-on-range-and-charging-visualized)
 
 <!-- /TOC -->
 
+
+
 # Summary
-At the start of the new year, my brother and I went on a road trip from Chicago, IL, to Cupertino, CA.  The fun part was that we were driving a Tesla Model S P100D.  The nerdy part was that we regularly pinged a Tesla API to retrieve data all along the route.  So aside from using the trip computer to regularly report our mileage and energy usage, we have a bunch of great data that w
-e can analyze and visualize with.  
+At the start of the new year, my brother and I went on a road trip from Chicago, IL, to Cupertino, CA.  The fun part was that we were driving a Tesla Model S P100D.  The nerdy part was that we regularly pinged a Tesla API to retrieve data all along the route.  So aside from using the trip computer to regularly report our mileage and energy usage, we have a bunch of great data that we can analyze and visualize with.  
 
 Below documents our five day road trip. I write about the experience taking a Tesla Model S on a cross-country trip, provide some code snippets that helped get the data ready for analysis, deep dive into a few stories the data can tell us, then conclude with my own decision about owning a Tesla.
-
-![Overall Trip](images/0C7EC421-36CB-4050-AFD0-71D52B46D6D7.png)
-*Tableau plotted GPS coordinates of each data point captured via the Tesla API.*
 
 - - - -
 ## The car
 The car we drove was a 2016 Model S P100D:
 
-![](images/p100d.jpg)
-*The beast, the beauty: the P100D.*
+>![](images/p100d.jpg)
+>*The beast, the beauty: the P100D.*
 
 My brother picked up this car to help with his 80 mile total commute to/from Downtown Chicago to North Chicago, Illinois.   For those of you familiar with Interstate 90/94 know that means: ouch.  With a new opportunity in California, he opted to drive his car himself instead of rely on an uncovered transport.  We done road trips before and this was the perfect opportunity to see how the Model S would perform on a long distance cruise.
 
@@ -53,13 +46,14 @@ The data extraction and basic manipulation was done in R.  The main packages use
 
 # Driving
 ## Snow + Cold Weather
+
 My brother’s car had the performance wheels swapped for snow tires to compensate for the winter weather in Chicago.  Snow tires along with the weight of the vehicle (mostly battery) really made the Model S feel like a tank regardless of how much snow and/or ice was on the road.  Compared to the 2013 BMW 335xi I was also driving during the holiday season, there was certainly a greater feeling of safety when coming to a stop in the Model S.  I only recall engaging the ABS system once in the Model S whereas I was regularly engaging ABS in the BMW when it came to making full stops in the snow.
 
 Cold weather really impacted the driving feel of the car.  Compared to driving it in warmer weather, the Model S didn’t have the same the same punch or feel regardless of whether the acceleration mode was set to Chill or Ludicrous.  Once you drove the car for 30-45 minutes, though, responsiveness came back to the life.  Even with the car being warmed up, the snow+ice offered zero opportunity to push the car to its limits.  
 
 As far as comfort goes, we found ourselves regularly using seat warmers to complement the car’s resistance heaters for raising the temperature of the cabin.  In super cold weather where we were constantly below 0°F, we found ourselves setting the heat to higher than our preferred temperatures to stay warm.  We engaged Range Mode once to see how different the climate system would feel and we felt a difference: heat from the vents felts noticeably cooler and our leg space was cold.  At no point were we in danger of freezing, though.  With us trying to maintain our range, though, it did lead to a few cooler cabin temperatures than we would have preferred.
 
-## Cold weather’s impact on range and charging
+## Cold weather’s impact on range and charging, discussed
 The most disappointing part of this experience was just how detrimental cold weather was on the Model S’s battery.  Cold weather caused both significant drops in range along and increased charge times.  The main culprit was that the battery would use a portion of its stored energy to keep itself at a safe operating temperature.  Cold weather also impacted the car’s routing ability.  Whenever we drove in extreme colds, the range would regularly decrease to the point where the car would not make it to the Supercharger it planned.  Only one time did the routing system reroute to a closer Supercharger; all other times the Trip screen would decrement the battery until it was depleted, warn us to slow down to extended range, and then never warn there was a closer Supercharge on route.  We ended up always setting one of our cell phones to the closest Supercharger on route to avoid being stuck between Superchargers in the cold.
 
 ## Navigation System Struggles
@@ -90,14 +84,14 @@ man_trip_times <- frame_data(
 
 With that bit of data available, I was able to write two custom functions to help classify each timestamp’s day and event:
 ```r
-## add an event label based off unix timestamp
+>> add an event label based off unix timestamp
 determine_label_event <- function(unixtimestamp){
   result = man_trip_times$event[unixtimestamp >= man_trip_times$start & unixtimestamp <= man_trip_times$end]
   result = if(length(result) == 0L){'out of bounds'}else{result}
   return(result)
 }
 
-## add an event day based off unit timestamp
+>> add an event day based off unix timestamp
 determine_label_day <- function(unixtimestamp){
   result = man_trip_times$day[unixtimestamp >= man_trip_times$start & unixtimestamp <= man_trip_times$end]
   result = if(length(result) == 0L){0}else{result}
@@ -107,12 +101,11 @@ determine_label_day <- function(unixtimestamp){
 
 With the trip day and distinction between ‘transit’ and ‘overnight charge’, I can now aggregate data per trip while ignoring impacts from overnight charging.
 
-# Overall Trip Metrics
+## Overall Trip Metrics
 Our trip consisted of five days starting in Chicago and stopping in Omaha, Denver, Salt Lake City, Reno, and finally Cupertino.  Using the data captured from the Tesla API, we can visualize our path across the US and measure the distance and time of our trip:
 
-
-
-
+>![Overall Trip](images/0C7EC421-36CB-4050-AFD0-71D52B46D6D7.png)
+>*Tableau plotted GPS coordinates of each data point captured via the Tesla API.*
 
 | trip_day| avg_temp_f| miles_traveled| running_miles| time_hrs| run_time|
 |--------:|----------:|--------------:|-------------:|--------:|--------:|
@@ -123,22 +116,22 @@ Our trip consisted of five days starting in Chicago and stopping in Omaha, Denve
 |        5|       56.9|          261.7|        2387.6|      6.5|     51.2|
 
 
-As you can see from the average temperature of -7°F, we hit some really code weather our first day.  In fact, our entire trip through Iowa was under 0°F:
+As you can see from the average temperature of -7°F, we hit some really code weather our first day.  In fact, nearly our entire trip through Iowa was under 0°F:
 
-![Weather Along Route](images/46D15371-20A4-43BB-A4B0-3D4AB87E03E1.png)
-
+>![Weather Along Route](images/46D15371-20A4-43BB-A4B0-3D4AB87E03E1.png)
+>*Outside weather recorded via the Model S*
 
 ## Charge Data
 Now that I know where each travel day starts and ends, I wanted to be able to understand (1) how many times we had to stop and charge and (2) how much of our trip was spend charging.  With `charge_state` being reported by the Model S, I was successful in determining start/end times of each charging occurrence via:
 ```r
-# create subset for charging questions
+> create subset for charging questions
 charge_tesla <- raw_tesladata %>%
   filter(trip_day != 0) %>% # ignoring data outside the bound of our roadtrip
   filter(trip_event == 'transit') %>% # ignoring overnight charging sessions
   select(unixtime, timestamp, trip_day, trip_event, battery_level
          ,outside_temp_f, latitude, longitude, contains('charge_state'))
 
-### create subset focused on start/end times
+>>> create subset focused on start/end times
 charge_start_end <- charge_tesla %>%
   select(unixtime, timestamp, trip_day, trip_event
          ,battery_level, outside_temp_f, latitude, longitude
@@ -160,7 +153,7 @@ charge_start_end <- charge_tesla %>%
   filter(charge_state_charging_state == 'Charging') %>% # drop records where changing stopped
   mutate(duration = as.numeric(next_timestamp - timestamp)) # calculate charge duration
 
-# summarize charge data
+> summarize charge data
 charge_start_end_summary <- charge_start_end %>%
   group_by(trip_day) %>%
   summarize(charges = n()
@@ -179,3 +172,5 @@ Which enables us to view a summary of the time spent charging:
 |        3|       3|           1.7|                   8.2|
 |        4|       3|           1.8|                  10.0|
 |        5|       2|           0.6|                  10.6|
+
+## Cold weather's impact on range and charging, visualized
