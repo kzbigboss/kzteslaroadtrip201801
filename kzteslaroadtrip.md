@@ -1,14 +1,43 @@
 # A 2,386.7 mile Tesla Road Trip, measured with data
+<!-- TOC depthFrom:1 depthTo:6 withLinks:1 updateOnSave:1 orderedList:0 -->
+
+- [A 2,386.7 mile Tesla Road Trip, measured with data](#a-23867-mile-tesla-road-trip-measured-with-data)
+- [Summary](#summary)
+	- [The car](#the-car)
+	- [The tech (AWS EC2 + RDS)](#the-tech-aws-ec2-rds)
+	- [The code (R + Tableau)](#the-code-r-tableau)
+- [Driving](#driving)
+	- [Snow + Cold Weather](#snow-cold-weather)
+	- [Cold weather’s impact on range and charging](#cold-weathers-impact-on-range-and-charging)
+	- [Navigation System Struggles](#navigation-system-struggles)
+	- [AutoPilot Hiccups](#autopilot-hiccups)
+- [Data](#data)
+	- [Manual Data](#manual-data)
+	- [add an event label based off unix timestamp](#add-an-event-label-based-off-unix-timestamp)
+	- [add an event day based off unit timestamp](#add-an-event-day-based-off-unit-timestamp)
+- [Overall Trip Metrics](#overall-trip-metrics)
+	- [Charge Data](#charge-data)
+- [create subset for charging questions](#create-subset-for-charging-questions)
+		- [create subset focused on start/end times](#create-subset-focused-on-startend-times)
+- [summarize charge data](#summarize-charge-data)
+
+<!-- /TOC -->
+
 # Summary
-At the start of the new year, my brother and I went on a road trip from Chicago, IL, to Cupertino, CA.  The fun part was that we were driving a Tesla Model S P100D.  The nerdy part was that we regularly pinged a Tesla API to retrieve various features of data along the entire route.  So aside from using the trip computer to regularly report our mileage and energy usage, we have a bunch of great data that we can analyze and visualize with.  This document is our attempt at writing about the experience taking a Tesla Model S on a cross-country trip along with some supporting tables and visualizations.
+At the start of the new year, my brother and I went on a road trip from Chicago, IL, to Cupertino, CA.  The fun part was that we were driving a Tesla Model S P100D.  The nerdy part was that we regularly pinged a Tesla API to retrieve data all along the route.  So aside from using the trip computer to regularly report our mileage and energy usage, we have a bunch of great data that w
+e can analyze and visualize with.  
+
+Below documents our five day road trip. I write about the experience taking a Tesla Model S on a cross-country trip, provide some code snippets that helped get the data ready for analysis, deep dive into a few stories the data can tell us, then conclude with my own decision about owning a Tesla.
 
 ![Overall Trip](images/0C7EC421-36CB-4050-AFD0-71D52B46D6D7.png)
+*Tableau plotted GPS coordinates of each data point captured via the Tesla API.*
 
 - - - -
 ## The car
 The car we drove was a 2016 Model S P100D:
 
 ![](images/p100d.jpg)
+*The beast, the beauty: the P100D.*
 
 My brother picked up this car to help with his 80 mile total commute to/from Downtown Chicago to North Chicago, Illinois.   For those of you familiar with Interstate 90/94 know that means: ouch.  With a new opportunity in California, he opted to drive his car himself instead of rely on an uncovered transport.  We done road trips before and this was the perfect opportunity to see how the Model S would perform on a long distance cruise.
 
