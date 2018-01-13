@@ -142,7 +142,7 @@ charge_start_end_summary <- charge_start_end %>%
 ```
 
 Which enables us to view a summary of the time spent charging:
-```
+
 | trip_day| charges| chrg_time_hrs| running_chrg_time_hrs|
 |--------:|-------:|-------------:|---------------------:|
 |        1|       4|           3.2|                   3.2|
@@ -150,4 +150,3 @@ Which enables us to view a summary of the time spent charging:
 |        3|       3|           1.7|                   8.2|
 |        4|       3|           1.8|                  10.0|
 |        5|       2|           0.6|                  10.6|
-```
