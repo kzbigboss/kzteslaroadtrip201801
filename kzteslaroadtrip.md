@@ -177,6 +177,7 @@ Which enables us to view a summary of the time spent charging:
 
 ### Charge Rate Influenced by cold weather
 Looking at the data captured by the car, the car recorded the outside temperature along with the rate of charge (wH).  I created a scatter plot to examine outside temperature and rate of charge and ended up with this:
+
 ![Rate of Charge v Outside Temperature](images/temp charge rate dash.png)
 
 >Each point represents the rate of charge against outside temperature while the car reported being in a 'charging' state.  This graphic ignores overnight charging.
