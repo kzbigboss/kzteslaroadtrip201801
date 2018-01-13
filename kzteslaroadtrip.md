@@ -177,7 +177,8 @@ Which enables us to view a summary of the time spent charging:
 
 ### Charge Rate Influenced by cold weather
 Looking at the data captured by the car, the car recorded the outside temperature along with the rate of charge (wH).  I created a scatter plot to examine outside temperature and rate of charge and ended up with this:
->![Rate of Charge v Outside Temperature](images/temp charge rate dash.png)
+![Rate of Charge v Outside Temperature](images/temp charge rate dash.png)
+
 >Each point represents the rate of charge against outside temperature while the car reported being in a 'charging' state.  This graphic ignores overnight charging.
 
 Day 1, colored in orange with an average temp of -7.0°F, shows the largest range of charge rate: between 140 Wh & 355 Wh.  Day 5, colored in yellow with an average temperature of 56.9°F, saw a much smaller range of charge: between 235 wH & 360 wH.
@@ -185,4 +186,5 @@ Day 1, colored in orange with an average temp of -7.0°F, shows the largest rang
 ### Cold Impact on Estimated Range v Ideal Range
 Each time you ping the car while it is charging, it will report back two measures of the mileage range: estimated range and ideal range.  The estimated range tries to measure how many miles you will be able to travel based on recent power usage patterns.  The ideal range, as you guessed, is the ideal range the car can travel if power usage was consumed in optimal conditions (lower speeds, fair climate, etc...).  Again using a scatter plot we can see how colder temperatures impacted the relationship between these two measures:
 >![Cold Impact: Estimated Range v Ideal Range](images/range ideal v estimate.png)
+
 >Each point represents the reported estimated range and ideal range colored by the outside temperature at the time of charging.  This graphic ignores overnight charging.
