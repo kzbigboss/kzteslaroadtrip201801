@@ -93,4 +93,5 @@ reduced_stops <- summary_tesla %>%
          ,running_time_no_hrs = cumsum(time_hrs_no_chrg)
          )
 
-kable(reduced_stops)
+kable(reduced_stops %>% select(trip_day, time_hrs, time_hrs_red_chrg, time_hrs_no_chrg))
+kable(reduced_stops %>% select(trip_day, running_time_hrs, running_time_red_hrs, running_time_no_hrs))
