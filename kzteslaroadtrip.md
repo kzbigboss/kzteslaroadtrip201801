@@ -1,5 +1,5 @@
 A 2,386.7 mile Tesla Road Trip, measured with data
-<!-- TOC depthFrom:1 depthTo:6 withLinks:1 updateOnSave:0 orderedList:0 -->
+<!-- TOC depthFrom:1 depthTo:6 withLinks:1 updateOnSave:1 orderedList:0 -->
 
 - [Summary](#summary)
 	- [The car](#the-car)
@@ -10,20 +10,23 @@ A 2,386.7 mile Tesla Road Trip, measured with data
 	- [Cold weather’s impact on range and charging, discussed](#cold-weathers-impact-on-range-and-charging-discussed)
 	- [Navigation System Struggles](#navigation-system-struggles)
 	- [AutoPilot Hiccups](#autopilot-hiccups)
-- [Data](#data)
+- [Data Points](#data-points)
 	- [Manual Data](#manual-data)
 	- [Overall Trip Metrics](#overall-trip-metrics)
 	- [Charge Data](#charge-data)
+	- [Charging time impact on total time](#charging-time-impact-on-total-time)
 	- [Cold weather's impact on range and charging, visualized](#cold-weathers-impact-on-range-and-charging-visualized)
 		- [Charge Rate Influenced by cold weather](#charge-rate-influenced-by-cold-weather)
 		- [Cold Impact on Estimated Range v Ideal Range](#cold-impact-on-estimated-range-v-ideal-range)
+		- [Average Range @ 90% Battery](#average-range-90-battery)
+	- [Regenerative Braking](#regenerative-braking)
 
 <!-- /TOC -->
 
 # Summary
 At the start of the new year, my brother and I went on a road trip from Chicago, IL, to Cupertino, CA.  The fun part was that we were driving a Tesla Model S P100D.  The nerdy part was that we regularly pinged a Tesla API to retrieve data all along the route.  So aside from using the trip computer to regularly report our mileage and energy usage, we have a bunch of great data that we can analyze and visualize with.  
 
-Below documents our five day road trip. I write about the experience taking a Tesla Model S on a cross-country trip, provide some code snippets that helped get the data ready for analysis, deep dive into a few stories the data can tell us, then conclude with my own decision about owning a Tesla.
+Below documents our five day road trip. I write about the experience taking a Tesla Model S on a cross-country trip and provide some code and visuals on a few of the topics I found interesting.  As time allows, I will be returning to this page to expand on the analyses and build some statistical models.
 
 - - - -
 ## The car
@@ -34,12 +37,17 @@ The car we drove was a 2016 Model S P100D:
 
 My brother picked up this car to help with his 80 mile total commute to/from Downtown Chicago to North Chicago, Illinois.   For those of you familiar with Interstate 90/94 know that means: ouch.  With a new opportunity in California, he opted to drive his car himself instead of rely on an uncovered transport.  We done road trips before and this was the perfect opportunity to see how the Model S would perform on a long distance cruise.
 
+>![](images/p100d_pickup.jpg)
+>*Leaving the Sales center*.
+
 ## The tech (AWS EC2 + RDS)
 Each Tesla vehicle has data modem built into the car to enable various features: software updates, live traffic, streaming radio, etc…. Turns out, there’s an API available to retrieve various data point from the car.  Tim Dorr provides unofficial on how to interact with this API at [Tesla Model S JSON API · Apiary](https://timdorr.docs.apiary.io/#).  I asked Reddit about best practices of tracking data at [Questions for upcoming road trip: charging frequency & extracting/analyzing trip data : teslamotors](https://www.reddit.com/r/teslamotors/comments/7mp56a/questions_for_upcoming_road_trip_charging/) where `u/Doctor_McKay` offered up a repo where he build an app to regularly ping a Tesla vehicle based on the vehicle’s current state (parked, driving, charging, etc…) Using his repo available on  [GitHub](https://github.com/DoctorMcKay/node-tesla-data), I worked with a friend to get this app running on AWS.
 
 The AWS setup was pretty simple.  We booted up a Linux EC2 machine (first an m4.large, way oversized, then downsized to a t2.micro) and cloned `u/Doctor_McKay`’s repo.  I modified the wait timers so that the program was pinging the API every minute.  Working with my friend, we wanted to try and make this as resilient as possible.  As a result, we made two decisions with this app:
-	1. We used a MySQL instance via AWS RDS instead of installing MySQL on our EC2 instance.  Logic here was that if the compute instance had a problem then the database would be isolated.
-	2. We wrote a quick bash script and ran it every minute via crontab to make sure the program was running.  This was a bit of overkill as `u/Doctor_McKay`’s code already had [foreverjs/forever](https://github.com/foreverjs/forever) included but we wanted to make absolutely sure if the program stopped for whatever reason that it would be restarted.
+
+1. We used a MySQL instance via AWS RDS instead of installing MySQL on our EC2 instance.  Logic here was that if the compute instance had a problem then the database would be isolated.
+
+2. We wrote a quick bash script and ran it every minute via crontab to make sure the program was running.  This was a bit of overkill as `u/Doctor_McKay`’s code already had [foreverjs/forever](https://github.com/foreverjs/forever) included but we wanted to make absolutely sure if the program stopped for whatever reason that it would be restarted.
 
 ## The code (R + Tableau)
 The data extraction and basic manipulation was done in R.  The main packages used was `dplyr` for data manipulation, `lubridate` for date manipulation, and `DBI` for database queries.
@@ -61,7 +69,7 @@ Bad
 ## AutoPilot Hiccups
 Bad
 
-# Data
+# Data Points
 ## Manual Data
 As much as I would love to say all this data was automated, I had to manually declare where each day stopped and started.  I experimented with a few different methods to automate this discovery: changes in GPS coordinates, changes in drive state, changes in charge state, etc..  Unfortunately, like many real world data sets, small things like moving the car in a driveway, driving through a parking garage, updating software all results in false positives with start/end times in this data set.  As a result, I took to Tableau to list all the timestamps, created a control parameter so I could convert the time to various timezones, then looked for where I could positively identify when we plugged in for overnight charging.  In order to use the data with my other R objects, I wrote the following `tibble`:
 ```r
@@ -107,7 +115,7 @@ Our trip consisted of five days starting in Chicago and stopping in Omaha, Denve
 >![Overall Trip](images/0C7EC421-36CB-4050-AFD0-71D52B46D6D7.png)
 >*Tableau plotted GPS coordinates of each data point captured via the Tesla API.*
 
-| trip_day| avg_temp_f| miles_traveled| running_miles| time_hrs| run_time|
+| trip_day| avg_temp_f| miles_traveled| running_miles| time_hrs| running_time_hrs|
 |--------:|----------:|--------------:|-------------:|--------:|--------:|
 |        1|       -7.0|          485.2|         485.2|     12.2|     12.2|
 |        2|       21.5|          561.5|        1046.7|     11.5|     23.7|
@@ -148,7 +156,7 @@ charge_start_end <- charge_tesla %>%
                               , 'CHANGE'
                               )
          ) %>%
-  filter(event_time == 'CHANGE') %>% # focus on where changes occured
+  filter(event_time == 'CHANGE') %>% # focus on where changes occurred
   mutate(next_timestamp = lead(timestamp)) %>% # peek ahead to see when the charge state ended
   filter(charge_state_charging_state == 'Charging') %>% # drop records where changing stopped
   mutate(duration = as.numeric(next_timestamp - timestamp)) # calculate charge duration
@@ -173,20 +181,87 @@ Which enables us to view a summary of the time spent charging:
 |        4|       3|           1.8|                  10.0|
 |        5|       2|           0.6|                  10.6|
 
+## Charging time impact on total time
+According to Google, a non-stop trip from Chicago to Cupertino with our stops along the way should take 34 hours:
+>![Google Maps Estimate](images/google_maps_estimate.png)
+>*via: [Google Maps](https://www.google.com/maps/dir/Chicago,+Illinois/Omaha,+Nebraska/Denver,+CO/Salt+Lake+City,+UT/Reno,+NV/Cupertino,+CA/@39.2931808,-122.1798206,4.2z/data=!4m38!4m37!1m5!1m1!1s0x880e2c3cd0f4cbed:0xafe0a6ad09c0c000!2m2!1d-87.6297982!2d41.8781136!1m5!1m1!1s0x87938dc8b50cfced:0x46424d4fae37b604!2m2!1d-95.9979883!2d41.2523634!1m5!1m1!1s0x876b80aa231f17cf:0x118ef4f8278a36d6!2m2!1d-104.990251!2d39.7392358!1m5!1m1!1s0x87523d9488d131ed:0x5b53b7a0484d31ca!2m2!1d-111.8910474!2d40.7607793!1m5!1m1!1s0x809940ae9292a09d:0x40c5c5ce7438f787!2m2!1d-119.8138027!2d39.5296329!1m5!1m1!1s0x808fb4571bd377ab:0x394d3fe1a3e178b4!2m2!1d-122.0321823!2d37.3229978!3e0)*
+
+However, looking at our [Overall Trip Metrics](#overall-trip-metrics) this trip took us a total of 51.2 hours in transit.  What would our trip look like if we reduced charge instances to 30 minutes?
+
+First, let's get the data calculated in R:
+```r
+> what if: charge time was only 30 minutes |OR| there were no charge stops
+reduced_stops <- summary_tesla %>%
+  left_join(charge_start_end_summary) %>%
+  select(trip_day, time_hrs, chrg_time_hrs, charges) %>%
+  mutate(time_hrs_red_chrg = time_hrs - chrg_time_hrs + (charges * .5)
+         ,time_hrs_no_chrg = time_hrs - chrg_time_hrs) %>%
+  select(-chrg_time_hrs, -charges) %>%
+  mutate(running_time_hrs = cumsum(time_hrs)
+         ,running_time_red_hrs = cumsum(time_hrs_red_chrg)
+         ,running_time_no_hrs = cumsum(time_hrs_no_chrg)
+         )
+
+kable(reduced_stops %>% select(trip_day, time_hrs, time_hrs_red_chrg, time_hrs_no_chrg))
+kable(reduced_stops %>% select(trip_day, running_time_hrs, running_time_red_hrs, running_time_no_hrs))
+```
+
+| trip_day| time_hrs| time_hrs_red_chrg| time_hrs_no_chrg|
+|--------:|--------:|-----------------:|----------------:|
+|        1|     12.2|              11.0|              9.0|
+|        2|     11.5|              10.2|              8.2|
+|        3|     11.1|              10.9|              9.4|
+|        4|      9.9|               9.6|              8.1|
+|        5|      6.5|               6.9|              5.9|
+
+| trip_day| running_time_hrs| running_time_red_hrs| running_time_no_hrs|
+|--------:|----------------:|--------------------:|-------------------:|
+|        1|             12.2|                 11.0|                 9.0|
+|        2|             23.7|                 21.2|                17.2|
+|        3|             34.8|                 32.1|                26.6|
+|        4|             44.7|                 41.7|                34.7|
+|        5|             51.2|                 48.6|                40.6|
+
+And in case the naming isn't clear:
+* `time_hrs_red_chrg` means 'time in hours with reduced charges'
+* `time_hrs_no_chrg` means 'time in hours without charge stops'
+* `running_time_red_hrs` means 'running time with reduced charges'
+* `running_time_no_hrs` means 'running time without charge stops'
+
+A few observations include:
+* Day 5 would have actually been slightly longer since we were getting good ranges and fast charging in California.
+* Reduced charges would have reduced our running time by 5%.
+* No charging stops would have reduced our running time by 11.6%
+	* However, even in an internal combustion engine (ICE) vehicle, we still would have had to make stops.
+
 ## Cold weather's impact on range and charging, visualized
 
 ### Charge Rate Influenced by cold weather
 Looking at the data captured by the car, the car recorded the outside temperature along with the rate of charge (wH).  I created a scatter plot to examine outside temperature and rate of charge and ended up with this:
 
-![Rate of Charge v Outside Temperature](images/temp_charge_rate_dash.png)
+>![Rate of Charge v Outside Temperature](images/temp_charge_rate_dash.png)
+>*Each point represents the rate of charge against outside temperature while the car reported being in a 'charging' state.  This graphic ignores overnight charging.*
 
-Each point represents the rate of charge against outside temperature while the car reported being in a 'charging' state.  This graphic ignores overnight charging.
-
-Day 1, colored in orange with an average temp of -7.0°F, shows the largest range of charge rate: between 140 Wh & 355 Wh.  Day 5, colored in yellow with an average temperature of 56.9°F, saw a much smaller range of charge: between 235 wH & 360 wH.
+Day 1, colored in orange with an average temp of -7.0°F, shows the largest range of charge rate: between 140 wH & 355 wH.  Day 5, colored in yellow with an average temperature of 56.9°F, saw a much smaller range of charge: between 235 wH & 360 wH.
 
 ### Cold Impact on Estimated Range v Ideal Range
 Each time you ping the car while it is charging, it will report back two measures of the mileage range: estimated range and ideal range.  The estimated range tries to measure how many miles you will be able to travel based on recent power usage patterns.  The ideal range, as you guessed, is the ideal range the car can travel if power usage was consumed in optimal conditions (lower speeds, fair climate, etc...).  Again using a scatter plot we can see how colder temperatures impacted the relationship between these two measures:
 
-![Cold Impact: Estimated Range v Ideal Range](images/range_ideal_v_estimate.png)
+>![Cold Impact: Estimated Range v Ideal Range](images/range_ideal_v_estimate.png)
+>*Each point represents the reported estimated range and ideal range colored by the outside temperature at the time of charging.  This graphic ignores overnight charging.*
 
-Each point represents the reported estimated range and ideal range colored by the outside temperature at the time of charging.  This graphic ignores overnight charging.
+In this graphic, we can see cold weather impacted the estimate range.  Looking at the data supporting this chart, it appears that estimated range reaches closer to ideal range when the temperature is above 32°F.  However, there was never a data point that had the ideal range equaling the estimated range.
+
+### Average Range @ 90% Battery
+To get a sense of the overall impact of weather on estimated range, let's calculate the average estimated range against average outside temperature when the battery reported 90%:
+
+>![Average Range @ 90% Battery](images/avg_range_at_90_battery.png)
+>*Average of reported estimated range and outside temperature per trip day inclusive of overnight charging.*
+
+While ignoring all other factors, the car reported 47% less range between Trip Day 1 (really cold) against Trip Day 4 (moderately cold).
+
+## Regenerative Braking
+In the previous graphic, you'll notice a higher range for Trip Day 3 than Trip Days 4 & 5.  We maintained a pretty similar drive style across all days, so I was surprised to see Day 3 with about 5% more range.  I recalled that we regularly decreased altitude between Denver and Salt Lake City so I thought I'd take a glance at regenerative braking:
+
+>![Regenerative Braking](images/regen_braking.png)
+>*Power usage reported when going faster than 40MPH.*

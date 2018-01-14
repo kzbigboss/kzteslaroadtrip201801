@@ -80,7 +80,17 @@ charge_start_end_summary <- charge_start_end %>%
 
 kable(charge_start_end_summary)
 
-display_data <- summary_tesla %>%
-  left_join(charge_start_end_summary)
+# what if: charge time was only 30 minutes |OR| there were no charge stops
+reduced_stops <- summary_tesla %>%
+  left_join(charge_start_end_summary) %>%
+  select(trip_day, time_hrs, chrg_time_hrs, charges) %>%
+  mutate(time_hrs_red_chrg = time_hrs - chrg_time_hrs + (charges * .5)
+         ,time_hrs_no_chrg = time_hrs - chrg_time_hrs
+         ) %>%
+  select(-chrg_time_hrs, -charges) %>%
+  mutate(running_time_hrs = cumsum(time_hrs)
+         ,running_time_red_hrs = cumsum(time_hrs_red_chrg)
+         ,running_time_no_hrs = cumsum(time_hrs_no_chrg)
+         )
 
-kable(display_data)
+kable(reduced_stops)
