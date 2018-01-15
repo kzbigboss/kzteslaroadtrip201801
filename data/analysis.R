@@ -4,6 +4,7 @@ cat("\014")
 
 # load libraries
 library(dplyr) #for data manipulation
+library(tidyr) #for reshaping
 library(DBI) #for interfacing with a database
 library(zoo) #for backfilling NAs along time series
 #library(rwunderground) #for downloading weater, deprecated
@@ -95,3 +96,20 @@ reduced_stops <- summary_tesla %>%
 
 kable(reduced_stops %>% select(trip_day, time_hrs, time_hrs_red_chrg, time_hrs_no_chrg))
 kable(reduced_stops %>% select(trip_day, running_time_hrs, running_time_red_hrs, running_time_no_hrs))
+
+ # regen braking on trip days 3-4
+regen_braking <- raw_tesladata %>%
+  select(timestamp, trip_day, trip_event, speed, drive_state_power) %>%
+  filter(trip_day > 2 # focus on trip days 3-5
+         ,trip_event == 'transit' # focus on when the car is in transit
+         ,speed > 40 # focus on records when the car was faster than 40MPH
+         ) %>%
+  mutate(power = as.numeric(drive_state_power) # reset data type
+         ,energy_state = if_else(power > 0, 'CONSUME','REGEN') # label consumption v regeneration
+         ) %>%
+  group_by(trip_day, energy_state) %>%
+  summarise(count = n()
+            ,avg_wh = round(mean(power),1)
+            )
+
+kable(regen_braking)
