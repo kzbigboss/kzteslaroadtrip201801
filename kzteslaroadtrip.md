@@ -1,6 +1,7 @@
-A 2,386.7 mile Tesla Road Trip, measured with data
+# A 2,386.7 mile Tesla Road Trip, measured with data
 <!-- TOC depthFrom:1 depthTo:6 withLinks:1 updateOnSave:1 orderedList:0 -->
 
+- [A 2,386.7 mile Tesla Road Trip, measured with data](#a-23867-mile-tesla-road-trip-measured-with-data)
 - [Summary](#summary)
 	- [The car](#the-car)
 	- [The tech (AWS EC2 + RDS)](#the-tech-aws-ec2-rds)
@@ -24,7 +25,6 @@ A 2,386.7 mile Tesla Road Trip, measured with data
 		- [Cold Impact on Estimated Range v Ideal Range](#cold-impact-on-estimated-range-v-ideal-range)
 		- [Average Range @ 90% Battery](#average-range-90-battery)
 	- [Regenerative Braking](#regenerative-braking)
-- [regen braking on trip days 3-4](#regen-braking-on-trip-days-3-4)
 
 <!-- /TOC -->
 
@@ -309,7 +309,7 @@ In in the colder weather experienced on Trip Days 1 & 2, regenerative braking di
 If we analyze the occurrences of CONSUME/REGEN on the latter trip days, we find:
 
 ```r
-# regen braking on trip days 3-4
+ # regen braking on trip days 3-4
 regen_braking <- raw_tesladata %>%
  select(timestamp, trip_day, trip_event, speed, drive_state_power) %>%
  filter(trip_day > 2 # focus on trip days 3-5
