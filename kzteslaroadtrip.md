@@ -8,6 +8,7 @@ A 2,386.7 mile Tesla Road Trip, measured with data
 		- [R](#r)
 		- [Tableau](#tableau)
 - [Driving Experience](#driving-experience)
+	- [Overall Experience](#overall-experience)
 	- [Snow + Cold Weather](#snow-cold-weather)
 	- [Cold weather’s impact on range and charging, discussed](#cold-weathers-impact-on-range-and-charging-discussed)
 	- [Supercharger experience](#supercharger-experience)
@@ -70,6 +71,11 @@ Tableau was used for all visualizations other than the markdown tables below.  W
 
 
 # Driving Experience
+## Overall Experience
+The below sections focus on some of the negatives we experienced on our trip.  However, it is not fair to say my overall experience driving the Model S was negative.  In fact, it is quite the opposite: driving this car was amazing.
+
+Driving a Tesla is unlike any over vehicle I have driven.  There is so much technology in the car that it is easy to forget the P100D is a high-end performance vehicle.  The thrill of driving is similar to driving a German automobile: there is a genuine connection between you and the road. The connection that BMWs and Audis offer are the rumble of the engine and the texture of the road felt through the steering wheel.  In a Tesla, the connection is much more technical: a driver display with the traditional telemetry information along with lane positioning, sensor reading/warning, nearby vehicle information, and more.  It is a hybrid physical+technical feeling that I have yet to experience anywhere else.
+
 ## Snow + Cold Weather
 
 My brother’s car had the performance wheels swapped for snow tires to compensate for the winter weather in Chicago.  Snow tires along with the weight of the vehicle (mostly battery)  made the Model S feel like a tank regardless of how much snow and/or ice was on the road.  Compared to the 2013 BMW 335xi I was also driving during the holiday season, there was certainly a greater feeling of safety when coming to a stop in the Model S.  I only recall engaging the ABS system once in the Model S whereas I was regularly engaging ABS in the BMW.
@@ -82,11 +88,20 @@ As far as comfort goes, we found ourselves regularly using seat warmers to compl
 The most disappointing part of this experience was just how detrimental cold weather was on the Model S’s battery.  Cold weather caused both significant drops in range along and increased charge times.  The main culprit was that the battery would use a portion of its stored energy to keep itself at a safe operating temperature.  Cold weather also impacted the car’s routing ability.  Whenever we drove in extreme colds, the range would regularly decrease to the point where the car would not make it to the Supercharger it planned.  Only one time did the routing system reroute to a closer Supercharger.  All other times the Trip screen would decrement the battery until it was depleted, warn us to slow down to extended range, and then never state there was a closer Supercharge on route.  We ended up always setting one of our cell phones to the closest Supercharger on route to avoid being stuck between Superchargers in the cold.
 
 ## Supercharger experience
+We never had a problem finding or plugging in at a Supercharger.  Cold weather impacted the time it took to charge, though, especially if the car did not get 30-45 minutes of drive time prior to charging.  The locations of the Superchargers were not always ideal, though.  In Illinois, the Superchargers were in large retail (non-food) shopping centers so it was not always easy to find restrooms or coffee/snacks.  In Iowa, the Superchargers were located in Hy-Vee and were always really accommodating with mini-restaurants or coffee shops inside.  In Nebraska and Utah, Superchargers were located in hotel parking lots; stepping in to the lobby to relax and hit the restrooms were fine but sometimes awkward if it was a small hotel and the front desk did not recognize us.  In Wyoming, Superchargers were located near shopping malls and were the most convenient in terms of finding things to do while we waited.  In Nevada, Superchargers were in Chevron stations and always had a casino nearby or attached (go figure).
 
 ## Navigation System Struggles
-Bad
+For a car as technologically advanced as the Model S, the navigation system does not perform well compared against Google Maps navigation.  Elon Musk [tweeted](https://twitter.com/elonmusk/status/943878616454127616?lang=en) that an update to navigation is coming early this year, but until then we experienced things like:
+* Inconsistent road names used between screens: the main screen used county/route numbers while driver screen used formal name and exit numbers.  I preferred the driver screen's name and exit number, but they did not appear until you were approaching the next turn.
+* Bad routing through downtown location: we ended up swapping to phone navigation through downtowns like Omaha and Denver as the Tesla navigation was regularly rerouting.  We drove through both those cities in the evening, so I cannot imagine traffic being a factor.
+* Trying to manually reroute to closer Superchargers was problematic.  Accidental taps on the screen would cancel the current route which reset the trip metrics displayed on the consumption screen.
+
 ## AutoPilot Hiccups
-Bad
+We probably spent >90% of our time on interstates cruising with both traffic aware cruise control and auto-steer enabled.  The few times we chose to manually control the car was when we were getting ready to exit or driving through curvy mountain roads when the Model S would prefer to hug a side.
+
+We regularly encountered hiccups when it came to bouncing in a straight lane (ping-pong) or losing center when a new lane or exit ramp would appear.
+* Ping-pong: This happened more often on roads covered with salt than clear roads.  Essentially the car would gradually rock back and forth from the left lane marker to the right lane marker.  Really need to emphasis the word gradual here; we were never close to crossing a lane marker.  After several hours of driving, though, it did become annoying as if we were on a swaying boat.  Fortunately once we left the snow covered parts of Illinois and Iowa, the occurrence rate dropped significantly.
+* New lanes & exit ramps: We experienced this fairly often.  Essentially what would happen is that the Model S would cruise along locked on to both the right and left lane marker.  One of the markers would disappear to accommodate an upcoming new lane or exit ramp. It felt as though the car would interpret the missing lane marker as though it lost track of the center of the lane and would begin drifting in the direction of the missing lane marker to find it.  Suddenly the lane marker would reappear (we never drifted into the new lane, just towards it) and the car would juke in the opposite direction to reposition itself in the center of the lane.
 
 # Data Points
 ## Manual Data
@@ -102,7 +117,7 @@ man_trip_times <- frame_data(
   3, 'overnight charge', 1515038975, 1515085120, # Salt Lake City hotel
   4, 'transit', 1515085181, 1515120812,          # Salt Lake City to Reno
   4, 'overnight charge', 1515120872, 1515184304, # Reno hotel
-  5, 'transit', 1515184364, 1515207813           # Reno to Cupterino
+  5, 'transit', 1515184364, 1515207813           # Reno to Cupertino
   ) %>%
   mutate(duration = end - start
          ,running_duration = cumsum(duration)
