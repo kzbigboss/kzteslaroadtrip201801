@@ -25,6 +25,10 @@
 		- [Cold Impact on Estimated Range v Ideal Range](#cold-impact-on-estimated-range-v-ideal-range)
 		- [Average Range @ 90% Battery](#average-range-90-battery)
 	- [Regenerative Braking](#regenerative-braking)
+- [Supplemental Data Points](#supplemental-data-points)
+	- [What is this section?](#what-is-this-section)
+	- [Mileage](#mileage)
+	- [Range: Ideal v Estimate by Trip Day](#range-ideal-v-estimate-by-trip-day)
 
 <!-- /TOC -->
 
@@ -337,3 +341,31 @@ kable(regen_braking)
 |        5|REGEN        |    49|  -13.4|
 
 Our highest occurrence of regeneration occurred on Trip Day 5 but at our lowest average watt hour (wH).  Makes sense considering we spent a lot of time in California traffic during afternoon rush hour.  Trip Day 4 had the greatest regenerative braking average wH but at a lower occurrence that Trip Day 3.  Without slicing this data further, there is not overwhelming evidence that regenerative braking impacted Trip Day 3's average estimated range.
+
+# Supplemental Data Points
+## What is this section?
+
+Reddit asked and I answered.  I originally shared this analysis on `r/telsamotors` on [this thread](https://www.reddit.com/r/teslamotors/comments/7qwnml/a_23867_mile_tesla_model_s_p100d_road_trip/) and some users had some questions.  For instances where I needed to create a new visual or do a little extra analysis, I am adding them to this section.
+
+## Mileage
+
+Two users asked about miles per hour. `u/Blacktracker` asked:
+>What was the average mi/h?
+
+and `u/hchux` asked:
+>do you happen to have average mph while driving to plot against as well?
+
+Here it is:
+![speed_and_distance](images/speed_and_distance.png)
+
+## Range: Ideal v Estimate by Trip Day
+`u/hchux` said:
+>on the ideal vs range chart I was trying to correlate the temperature to the ideal range and can't tell the gradient differences in the blues. More specifically I was trying to find day 3's numbers on this chart and couldn't exactly determine them.
+
+Great call out.  I experimented with a few different ways to incorporate Trip Day into this graphic.  The struggle is that when you look at the lines on day by day basis, it actually gets pretty hard to tell how the angles of the lines change.  So I took a simple approach and just swapped out the temperature color gradient and popped in Trip Day:
+
+![range_ideal_v_estimate_by_day](images/range_dash_by_day.png)
+
+With our average temperatures getting warmer as we progressed through our trip, it is no surprise to see the days falling in a numerical order from right to left.  
+
+If you look closely, though, you will notice a few Trip Day 4 (green) lines where the relationship worsened between ideal range and estimated range.  What happened here?  Well... this is the day we had the most fun with the car in Ludicrous mode... so I am fairly certain us hammering on the acceleration hurt our efficiency.  Worth it.
